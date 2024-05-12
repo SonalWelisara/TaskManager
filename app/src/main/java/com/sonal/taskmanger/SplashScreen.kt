@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
+import com.sonal.taskmanger.databinding.ActivitySplashScreenBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

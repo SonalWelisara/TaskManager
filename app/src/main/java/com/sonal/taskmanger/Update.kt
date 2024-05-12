@@ -14,7 +14,6 @@ class Update : AppCompatActivity() {
     private lateinit var database:myDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding= ActivityUpdateBinding.inflate(layoutInflater)
         setContentView(binding.root)
         database= Room.databaseBuilder(
@@ -30,16 +29,24 @@ class Update : AppCompatActivity() {
             binding.deleteButton.setOnClickListener{
                 DataObject.deleteData(pos)
                 GlobalScope.launch {
-                    database.dao().deleteTask(Entity(pos+1,title,priority))
+                    database.dao().deleteTask(
+                        Entity(pos+1,title,priority)
+                    )
                 }
-                myIntent()
             }
 
             binding.updateButton.setOnClickListener{
-                DataObject.updateData(pos, binding.createTitle.text.toString(), binding.createPriority.text.toString())
+                DataObject.updateData(
+                    pos,
+                    binding.createTitle.text.toString(),
+                    binding.createPriority.text.toString()
+                )
                 GlobalScope.launch {
-                    database.dao().updateTask(Entity(pos+1, binding.createTitle.text.toString(), binding.createPriority.text.toString()))
+                    database.dao().updateTask(
+                        Entity(pos+1, binding.createTitle.text.toString(), binding.createPriority.text.toString())
+                    )
                 }
+
                  myIntent()
             }
         }
