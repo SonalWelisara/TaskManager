@@ -11,9 +11,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="FocusOn"
+        android:text="Focus On"
         android:layout_gravity="center_horizontal"
-        android:textColor="@color/textColor"
+        android:textColor="@color/white"
         android:textSize="40sp"
         android:fontFamily="sans-serif"/>
     <TextView
