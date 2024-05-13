@@ -33,6 +33,8 @@ class Update : AppCompatActivity() {
                         Entity(pos+1,title,priority)
                     )
                 }
+
+                myIntent()
             }
 
             binding.updateButton.setOnClickListener{
