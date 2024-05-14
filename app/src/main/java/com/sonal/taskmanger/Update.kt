@@ -2,6 +2,7 @@ package com.sonal.taskmanger
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
@@ -37,19 +38,40 @@ class Update : AppCompatActivity() {
                 myIntent()
             }
 
-            binding.updateButton.setOnClickListener{
-                DataObject.updateData(
-                    pos,
-                    binding.createTitle.text.toString(),
-                    binding.createPriority.text.toString()
-                )
-                GlobalScope.launch {
-                    database.dao().updateTask(
-                        Entity(pos+1, binding.createTitle.text.toString(), binding.createPriority.text.toString())
-                    )
-                }
+            fun showErrorToast() {
+                Toast.makeText(this, "Error: Title and Priority cannot be empty", Toast.LENGTH_SHORT).show()
+            }
+            fun showInvalidError() {
+                Toast.makeText(this, "Error: Invalid Priority", Toast.LENGTH_SHORT).show()
+            }
 
-                 myIntent()
+            binding.updateButton.setOnClickListener{
+
+                if(binding.createTitle.text.toString().trim{it<=' '}.isNotEmpty()
+                    && binding.createPriority.text.toString().trim{it<=' '}.isNotEmpty()){
+
+                    if(binding.createPriority.text.toString().toLowerCase() == "high"
+                        || binding.createPriority.text.toString().toLowerCase() == "medium"
+                        || binding.createPriority.text.toString().toLowerCase() == "low"){
+
+                        DataObject.updateData(
+                            pos,
+                            binding.createTitle.text.toString(),
+                            binding.createPriority.text.toString()
+                        )
+                        GlobalScope.launch {
+                            database.dao().updateTask(
+                                Entity(pos+1, binding.createTitle.text.toString(), binding.createPriority.text.toString())
+                            )
+                        }
+                        myIntent()
+                    }else{
+                        showInvalidError()
+                    }
+
+                }else{
+                    showErrorToast()
+                }
             }
         }
     }
