@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class Update : AppCompatActivity() {
     private lateinit var binding: ActivityUpdateBinding
-    private lateinit var database:myDatabase
+    private lateinit var database: myDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityUpdateBinding.inflate(layoutInflater)
@@ -27,12 +27,17 @@ class Update : AppCompatActivity() {
             binding.createTitle.setText(title)
             binding.createPriority.setText(priority)
 
+
             binding.deleteButton.setOnClickListener{
                 DataObject.deleteData(pos)
                 GlobalScope.launch {
                     database.dao().deleteTask(
                         Entity(pos+1,title,priority)
                     )
+                    for (i in pos until DataObject.getAllData().size) {
+                        val item = DataObject.getData(i)
+                        database.dao().updateTask(Entity(i + 1, item.title, item.priority))
+                    }
                 }
 
                 myIntent()
@@ -45,25 +50,27 @@ class Update : AppCompatActivity() {
                 Toast.makeText(this, "Error: Invalid Priority", Toast.LENGTH_SHORT).show()
             }
 
+
             binding.updateButton.setOnClickListener{
+                val titleUp = binding.createTitle.text.toString()
+                val priorityUp = binding.createPriority.text.toString()
+                if(titleUp.trim{it<=' '}.isNotEmpty()
+                    && priorityUp.trim{it<=' '}.isNotEmpty()){
 
-                if(binding.createTitle.text.toString().trim{it<=' '}.isNotEmpty()
-                    && binding.createPriority.text.toString().trim{it<=' '}.isNotEmpty()){
+                    if(priorityUp.toLowerCase() == "high"
+                        || priorityUp.toLowerCase() == "medium"
+                        || priorityUp.toLowerCase() == "low"){
 
-                    if(binding.createPriority.text.toString().toLowerCase() == "high"
-                        || binding.createPriority.text.toString().toLowerCase() == "medium"
-                        || binding.createPriority.text.toString().toLowerCase() == "low"){
-
-                        DataObject.updateData(
-                            pos,
-                            binding.createTitle.text.toString(),
-                            binding.createPriority.text.toString()
-                        )
                         GlobalScope.launch {
                             database.dao().updateTask(
-                                Entity(pos+1, binding.createTitle.text.toString(), binding.createPriority.text.toString())
+                                Entity(pos+1, titleUp, priorityUp)
                             )
                         }
+                        DataObject.updateData(
+                            pos,
+                            titleUp,
+                            priorityUp
+                        )
                         myIntent()
                     }else{
                         showInvalidError()
